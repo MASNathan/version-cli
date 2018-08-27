@@ -5,36 +5,38 @@ namespace App\Commands;
 use Illuminate\Console\Scheduling\Schedule;
 use LaravelZero\Framework\Commands\Command;
 
-class InspiringCommand extends Command
+class IncrementCommand extends Command
 {
     /**
      * The signature of the command.
      *
      * @var string
      */
-    protected $signature = 'inspiring {name=Artisan}';
+    protected $signature = 'increment';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Display an inspiring quote';
+    protected $description = 'Command description';
 
     /**
      * Execute the console command.
+     *
+     * @return void
      */
     public function handle(): void
     {
-        $this->info('Simplicity is the ultimate sophistication. - Leonardo da Vinci');
-
-        $this->notify("Hey {$this->argument('name')}", 'Enjoy the fresh air!');
+        // version increment 0.0.1
     }
 
     /**
      * Define the command's schedule.
      *
      * @param  \Illuminate\Console\Scheduling\Schedule $schedule
+     *
+     * @return void
      */
     public function schedule(Schedule $schedule): void
     {
