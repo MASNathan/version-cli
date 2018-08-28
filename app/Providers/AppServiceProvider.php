@@ -22,15 +22,11 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(VersionList::class, function () {
-            $gitPath = getcwd() . DIRECTORY_SEPARATOR . '.git/refs/tags/';
+            $versionsList = new VersionList();
 
-            // for now we only support git
+            $versionsList = $versionsList->merge($this->getGitVersions());
 
-            if (!is_dir($gitPath)) {
-                throw new \Exception("GIT tags directory not found!");
-            }
-
-            return VersionList::make(glob($gitPath . '*'))
+            return $versionsList
                 ->map(function ($path) {
                     return new Version(basename($path));
                 })
@@ -38,5 +34,16 @@ class AppServiceProvider extends ServiceProvider
                     return version_compare($a, $b);
                 });
         });
+    }
+
+    protected function getGitVersions(): VersionList
+    {
+        $gitPath = getcwd() . DIRECTORY_SEPARATOR . '.git/refs/tags/';
+
+        if (!is_dir($gitPath)) {
+            return new VersionList();
+        }
+
+        return VersionList::make(glob($gitPath . '*'));
     }
 }

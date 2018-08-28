@@ -2,7 +2,8 @@
 
 namespace App\Commands;
 
-use Illuminate\Console\Scheduling\Schedule;
+use App\Version;
+use App\VersionList;
 use LaravelZero\Framework\Commands\Command;
 
 class IncrementCommand extends Command
@@ -12,14 +13,28 @@ class IncrementCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'increment';
+    protected $signature = 'increment
+                            {version : Value to increment version with}
+                            {--file= : File with current version string}';
 
     /**
      * The description of the command.
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Increments current version with a given value';
+
+    /**
+     * @var VersionList
+     */
+    protected $versionList;
+
+    public function __construct(VersionList $versionList)
+    {
+        parent::__construct();
+
+        $this->versionList = $versionList;
+    }
 
     /**
      * Execute the console command.
@@ -28,18 +43,11 @@ class IncrementCommand extends Command
      */
     public function handle(): void
     {
-        // version increment 0.0.1
-    }
+        if ($this->hasOption('file') && $this->option('file')) {
+            $version = trim(file_get_contents(getcwd() . DIRECTORY_SEPARATOR . $this->option('file')));
+            $this->versionList = VersionList::make([new Version($version)]);
+        }
 
-    /**
-     * Define the command's schedule.
-     *
-     * @param  \Illuminate\Console\Scheduling\Schedule $schedule
-     *
-     * @return void
-     */
-    public function schedule(Schedule $schedule): void
-    {
-        // $schedule->command(static::class)->everyMinute();
+        $this->info((string)$this->versionList->last()->increment($this->argument('version')));
     }
 }

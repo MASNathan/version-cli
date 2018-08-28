@@ -20,6 +20,36 @@ class Version
         $this->z = isset($match[2]) ? (int)$match[2] : null;
     }
 
+    public function increment($incrementalVersion): Version
+    {
+        if (!is_a($incrementalVersion, Version::class)) {
+            $incrementalVersion = new static($incrementalVersion);
+        }
+
+        $versionNumbers = [];
+
+        $versionNumbers[] = $this->getX() + $incrementalVersion->getX();
+        $versionNumbers[] = $this->getY() + $incrementalVersion->getY();
+        $versionNumbers[] = $this->getZ() + $incrementalVersion->getZ();
+
+        return new self(implode('.', $versionNumbers));
+    }
+
+    public function getX(): ?int
+    {
+        return $this->x;
+    }
+
+    public function getY(): ?int
+    {
+        return $this->y;
+    }
+
+    public function getZ(): ?int
+    {
+        return $this->z;
+    }
+
     public function __toString()
     {
         $versionParts = array_filter([
