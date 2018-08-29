@@ -12,7 +12,7 @@ class Version
 
     public function __construct($versionString)
     {
-        preg_match('/([0-9])+\.([0-9])+\.?([0-9])?/', $versionString, $match);
+        preg_match('/([0-9]+)\.([0-9]+)\.?([0-9]+)?/', $versionString, $match);
 
         array_shift($match);
         $this->x = isset($match[0]) ? (int)$match[0] : null;
