@@ -48,6 +48,6 @@ class IncrementCommand extends Command
             $this->versionList = VersionList::make([new Version($version)]);
         }
 
-        $this->info((string)$this->versionList->last()->increment($this->argument('version')));
+        $this->line((string)$this->versionList->last()->increment($this->argument('version')));
     }
 }
